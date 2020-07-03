@@ -3,14 +3,19 @@ extern crate image;
 use image::{ImageBuffer, Rgb};
 use imageproc::drawing::draw_text_mut;
 use rusttype::{Font, Scale};
+use structopt::StructOpt;
+
+#[derive(StructOpt)]
+struct Cli {
+    imgx: u32,
+    imgy: u32,
+}
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
-    let inputx = String::from(&args[1]);
-    let inputy = String::from(&args[2]);
-    let imgx: u32 = inputx.parse().unwrap();
-    let imgy: u32 = inputy.parse().unwrap();
-
+    let args = Cli::from_args();
+    let imgx: u32 = args.imgx;
+    let imgy: u32 = args.imgy;
+    
     let mut imgbuf = ImageBuffer::new(imgx, imgy);
 
     for (_, _, pixel) in imgbuf.enumerate_pixels_mut() {
@@ -23,10 +28,10 @@ fn main() {
     let font = Vec::from(include_bytes!("OpenSans-Regular.ttf") as &[u8]);
     let font = Font::from_bytes(font).unwrap();
 
-    let height = 12.0;
+    let font_size = 20.0;
     let scale = Scale {
-        x: height * 2.0,
-        y: height,
+        x: font_size,
+        y: font_size,
     };
 
     let x = imgx.to_string();
@@ -36,12 +41,12 @@ fn main() {
     draw_text_mut(
         &mut imgbuf,
         Rgb([255u8, 255u8, 255u8]),
-        imgx / 2,
-        imgy / 2,
+        0,
+        0,
         scale,
         &font,
         caption,
     );
-    
+
     imgbuf.save("output.png").unwrap();
 }
