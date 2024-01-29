@@ -7,16 +7,16 @@ use structopt::StructOpt;
 
 #[derive(StructOpt)]
 struct Cli {
-    imgx: u32,
-    imgy: u32,
+    width: u32,
+    height: u32,
 }
 
 fn main() {
     let args = Cli::from_args();
-    let imgx: u32 = args.imgx;
-    let imgy: u32 = args.imgy;
+    let width: u32 = args.width;
+    let height: u32 = args.height;
     
-    let mut imgbuf = ImageBuffer::new(imgx, imgy);
+    let mut imgbuf = ImageBuffer::new(width, height);
 
     for (_, _, pixel) in imgbuf.enumerate_pixels_mut() {
         let r = 128 as u8;
@@ -34,8 +34,8 @@ fn main() {
         y: font_size,
     };
 
-    let x = imgx.to_string();
-    let y = imgy.to_string();
+    let x = width.to_string();
+    let y = height.to_string();
     let caption: &str = &(x + " x " + &y);
 
     draw_text_mut(
